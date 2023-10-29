@@ -43,12 +43,12 @@ export default function Home() {
             {/*<button id="logout" onClick={onLogout} className="hidden mx-auto">Logout</button>*/}
           </div>
           <div className="text-center ">
-            <p className="text-xl">We use WalletConnect</p>
+            <p className="text-xl">We use Freighter wallet for Soroban Network</p>
             <li className="list-none">
               {/*<Link href={'https://lobstr.co'} target="_blank">Lobstr</Link> • <Link href={'https://xbull.app'} target="_blank">xBull</Link> • <Link href={'https://trustwallet.com'} target="_blank">TrustWallet</Link>*/}
-              Download <Link href={'https://lobstr.co'} target="_blank">Lobstr</Link> wallet
+              Download <Link href={'https://www.freighter.app/'} target="_blank">Freighter</Link> wallet
             </li>
-            <p className="text-sm text-slate-400 mt-4">You will need to have XLM in a wallet supported by WalletConnect, such as Lobstr.  WalletConnect is a secure, end-to-end encrypted, multi-chain API protocol, improving security over traditional Browser-Extension based wallets.  You can learn more in their documentation.</p>
+            <p className="text-sm text-slate-400 mt-4">You will need to have XLM in a wallet that supports Soroban Network, such as Freighter.  Freighter is a secure, non-custodial, end-to-end encrypted, blockchain wallet. You can learn more in their website.</p>
           </div>
         </div>
       </Page>
