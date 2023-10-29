@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('/fonts/Metropolis/Metropolis-Thin.woff2') format('woff2');
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('/fonts/Metropolis/Metropolis-Regular.woff2') format('woff2');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('/fonts/Metropolis/Metropolis-Bold.woff2') format('woff2');
+  font-weight: 800;
+}
+
+body {
+  font-family: Metropolis;
+  font-weight: 300;
+  font-size: 17px;
+  background-color: #090020; /*#030b36*/
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  line-height: 40px;
+  margin-bottom: 10px;
+}
+
+input,
+textarea {
+  min-height: 60px;
+  background-color: #00440088;
+  border-radius: 14px;
+  border: none;
+  padding: 5px 10px;
+  font-size: 17px;
+  /* color: #606885 */
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+nav {
+  margin: 10px auto 80px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border-bottom: 1px solid #ddd;
+}
+
+nav a {
+  margin-left: 12px;
+}
+
+nav .logo {
+  margin-right: auto;
+}
+
+footer {
+  display: block;
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 60px;
+  color: #777;
+  border-top: 1px solid #eaeaea;
+}
+
+/* Extra styles */
+
+.lineheight12 {
+  line-height: 1.2em;
+}
+
+.mainButton {
+  text-align: center;
+  background: #ffffff22;
+  width: 100%;
+}
+
+.mainButton:hover {
+  background: #ffffff33;
+}
+
+warn { color: #f85; }

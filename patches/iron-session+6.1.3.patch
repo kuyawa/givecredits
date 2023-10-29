@@ -1,0 +1,12 @@
+diff --git a/node_modules/iron-session/next/index.ts b/node_modules/iron-session/next/index.ts
+index 7d78069..6c296f1 100644
+--- a/node_modules/iron-session/next/index.ts
++++ b/node_modules/iron-session/next/index.ts
+@@ -7,6 +7,7 @@ import type {
+ } from "next";
+ import type { IronSessionOptions } from "iron-session";
+ import { getIronSession } from "iron-session";
++// @ts-ignore
+ import getPropertyDescriptorForReqSession from "../src/getPropertyDescriptorForReqSession";
+ import { IncomingMessage, ServerResponse } from "http";
+ 

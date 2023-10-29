@@ -1,0 +1,34 @@
+version: 0.1
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+
+    commands:
+      # install npm
+      - yarn install
+
+  build:
+    commands:
+      # run build script
+      - yarn build
+
+artifacts:
+  # include all files required to run application
+  # notably excluded is node_modules, as this will cause overwrite error on deploy
+  files:
+    - assets/**/*
+    - components/**/*
+    - containers/**/*
+    - pages/**/*
+    - public/**/*
+    - scripts/**/*
+    - settings/**/*
+    - utils/**/*
+    - styles/**/*
+    - jsconfig.json
+    - package.json
+    - appspec.yml
+    - postcss.config.js
+    - tailwind.config.js
