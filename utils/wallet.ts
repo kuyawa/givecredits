@@ -30,6 +30,7 @@ export default class Wallet {
       return {success:true, account:this.account}
     } catch(ex) {
       console.error(ex)
+      return {success:false, account:''}
     }
   }
 
@@ -49,7 +50,9 @@ export default class Wallet {
        asset: StellarSDK.Asset.native(),
        amount: amt
       })
-      let txn = new StellarSDK.TransactionBuilder(act, { fee, network:nwk, networkPassphrase:net })
+      // TODO: fix type error: TransactionBuilderOptions <<<
+      const opt = { fee, network:nwk, networkPassphrase:net }
+      let txn = new StellarSDK.TransactionBuilder(act, opt)
        //.setNetworkPassphrase(net)
        .addOperation(opr)
        .setTimeout(30)
@@ -72,7 +75,7 @@ export default class Wallet {
       //console.log('TXS', txs)
 
       //const txs = new StellarSDK.TransactionBuilder.fromXDR(sgn, this.hznurl)
-      const txs = new StellarSDK.TransactionBuilder.fromXDR(sgn, net)
+      const txs = StellarSDK.TransactionBuilder.fromXDR(sgn, net)
       console.log('TXS', txs)
       const result = await this.horizon.submitTransaction(txs)
       console.log('RES', result)

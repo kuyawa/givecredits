@@ -1,4 +1,6 @@
-import * as SorobanClient from 'soroban-client'
+const SorobanClient = require('soroban-client')
+//import * as SorobanClient from 'soroban-client'
+//import {assembleTransaction, Contract, Keypair, Server, SorobanRpc, TransactionBuilder, TimeoutInfinite} from 'soroban-client'
 
 async function sendTx(tx, secondsToWait, server) {
   //console.log('SEND', tx)
@@ -68,7 +70,7 @@ export default async function invoke({ method, args = [], fee = 100, responseTyp
     return parseResultXdr(simulated.result.retval)
   }
   if (authsCount > 1) {
-    throw new NotImplementedError("Multiple auths not yet supported")
+    throw new Error('Multiple auths not yet supported')
   }
   const txr = SorobanClient.assembleTransaction(tx, networkPassphrase, simulated).build()
   console.log('TXR', txr)

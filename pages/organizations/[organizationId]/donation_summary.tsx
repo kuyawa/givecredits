@@ -14,9 +14,9 @@ import TextInput from 'components/form/TextInput'
 import TextRow from 'components/TextRow'
 import { getOrganizationById, getInitiativeById } from 'utils/registry'
 import getRates from 'utils/rates'
-import PaymentXDR from 'utils/payment'
-import trustlineXDR from 'utils/trustlineXDR'
-import checkTrustline from 'utils/checkTrustline'
+//import PaymentXDR from 'utils/payment'
+//import trustlineXDR from 'utils/trustlineXDR'
+//import checkTrustline from 'utils/checkTrustline'
 import Wallet from 'utils/wallet'
 import {postApi} from 'utils/api'
 import {$$} from 'utils/common'
@@ -74,10 +74,9 @@ async function sendPayment(name, email, organization, initiativeId, amount, curr
   $$('message', 'Waiting for confirmation')
   const destin = orgwallet.address
   console.log('Sending payment to', destin)
-  const initId = 123 // TODO: get init id
-  let result = await wallet.init()
-  result = await wallet.connect()
-  const source = result?.account
+  await wallet.init()
+  const info = await wallet.connect()
+  const source = info?.account
   console.log('SOURCE', source)
   if(!source){
     $$('message', 'Error: Signature rejected by user')
@@ -89,7 +88,7 @@ async function sendPayment(name, email, organization, initiativeId, amount, curr
   //const {txid, xdr} = await PaymentXDR(source, destin, amount, currency, issuer, memo)
   //console.log('txid', txid, xdr)
   //wallet.signAndSubmit(xdr, async result=>{
-  result = await wallet.payment(destin, amount, memo)
+  const result = await wallet.payment(destin, amount, memo)
   console.log('UI RESULT', result)
   if(!result?.success || result?.error){
    console.log('Error', result.error)
@@ -217,7 +216,7 @@ export default function Donate({
       setConfirmed(false)
       sendPayment(name, email, organization, initiativeId, amount, currency, issuer, destinationTag, yesReceipt, yesNFT)
     }
-  }, [confirmed, name, email, organization, amount, currency, issuer, destinationTag, yesReceipt, yesNFT])
+  }, [confirmed, name, email, organization, initiativeId, amount, currency, issuer, destinationTag, yesReceipt, yesNFT])
 
   return (
     <Page>

@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import upload from 'libs/nft/upload'
+//import upload from 'libs/nft/upload'
 import mint from 'libs/nft/mint'
-import fetchLedger from 'libs/server/fetchLedger'
-import { getOrganizationsByWallet, getInitiativeByTag, createNFT } from 'utils/registry'
-import getRates from 'utils/rates'
+//import fetchLedger from 'libs/server/fetchLedger'
+//import { getOrganizationsByWallet, getInitiativeByTag, createNFT } from 'utils/registry'
+//import getRates from 'utils/rates'
 
 
 
@@ -47,6 +47,7 @@ export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+/*
 async function MintOLD(req: NextApiRequest, res: NextApiResponse) {
   console.log('MINTING...')
 
@@ -229,3 +230,4 @@ async function MintOLD(req: NextApiRequest, res: NextApiResponse) {
     return res.status(500).json({ success: false, error: ex.message })
   }
 }
+*/
