@@ -1,12 +1,12 @@
-import Link, { LinkProps } from 'next/link';
-import React from 'react';
-import Card from './card';
-import Icon from './icon';
+import Link, { LinkProps } from 'next/link'
+import React from 'react'
+import Card from './card'
+import Icon from './icon'
 
 interface TileTypes {
-  text: string;
-  color?: string;
-  icon?: string;
+  text: string
+  color?: string
+  icon?: string
 }
 
 const Tile = ({ text, color, icon, href, ...props }: TileTypes & LinkProps) => (
@@ -24,6 +24,6 @@ const Tile = ({ text, color, icon, href, ...props }: TileTypes & LinkProps) => (
       </div>
     </Card>
   </Link>
-);
+)
 
-export default Tile;
+export default Tile

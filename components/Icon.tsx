@@ -1,4 +1,4 @@
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps } from 'react'
 
 interface IconProps {
   icon: string;
@@ -9,6 +9,6 @@ const Icon = ({ icon, className, ...props }: IconProps & HTMLProps<HTMLSpanEleme
   <span className={`material-icons ${className}`} {...props}>
     {icon}
   </span>
-);
+)
 
-export default Icon;
+export default Icon

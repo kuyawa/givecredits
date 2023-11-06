@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-import React from 'react';
-import Button from './button';
+import { useRouter } from 'next/router'
+import React from 'react'
+import Button from './button'
 
 const HomeButton = () => {
-  const router = useRouter();
+  const router = useRouter()
   return (
     <Button
       text="Home"
@@ -11,7 +11,7 @@ const HomeButton = () => {
       icon="home"
       onClick={() => router.push('/xapp')}
     />
-  );
-};
+  )
+}
 
-export default HomeButton;
+export default HomeButton

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
 
 interface TextRowProps {
-  text: string;
-  label: string;
-  className?: string;
+  text: string
+  label: string
+  className?: string
 }
 
 const TextRow = ({ text, label, className }: TextRowProps) => (
@@ -11,6 +11,6 @@ const TextRow = ({ text, label, className }: TextRowProps) => (
     <span className="text-green-300 text-sm uppercase text-left">{label}</span>
     <span className="text-green-50 md:text-2xl text-xl text-left truncate">{text}</span>
   </div>
-);
+)
 
-export default TextRow;
+export default TextRow

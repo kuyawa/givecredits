@@ -1,4 +1,4 @@
-import React, { HTMLProps, ReactChild } from 'react';
+import React, { HTMLProps, ReactChild } from 'react'
 
 interface CardProps {
   children: ReactChild;
@@ -16,6 +16,6 @@ const Card = ({
   >
     {children}
   </div>
-);
+)
 
-export default Card;
+export default Card

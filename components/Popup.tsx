@@ -1,8 +1,8 @@
 interface PopupProps {
-  headerText?: string;
-  bodyText?: string;
-  button1?: JSX.Element;
-  button2?: JSX.Element;
+  headerText?: string
+  bodyText?: string
+  button1?: JSX.Element
+  button2?: JSX.Element
 }
 
 //Popup component to display popup
@@ -33,6 +33,6 @@ const Popup = ({ headerText, bodyText, button1, button2 }: PopupProps) => (
       </div>
     </div>
   </>
-);
+)
 
-export default Popup;
+export default Popup

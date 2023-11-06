@@ -4,10 +4,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 interface PageProps {
-  toolbarTitle?: string;
-  noPadding?: boolean;
-  footer?: React.ElementType;
-  className?: string;
+  toolbarTitle?: string
+  noPadding?: boolean
+  footer?: React.ElementType
+  className?: string
 }
 
 export const PageWrapper = ({ children }) => {
@@ -15,8 +15,8 @@ export const PageWrapper = ({ children }) => {
     <div className="min-h-screen flex flex-col align-middle justify-center bg-slate-300">
       {children}
     </div>
-  );
-};
+  )
+}
 
 const Page = ({
   toolbarTitle,
@@ -49,7 +49,7 @@ const Page = ({
       {/*<script defer src="/scripts/stellar-sdk.js"></script>*/}
       <script defer src="/scripts/common.js"></script>
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

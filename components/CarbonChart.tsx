@@ -88,7 +88,7 @@ const CarbonChart = ({
         {tons.map(() => { return (<div style={style.ton} key={Math.random()}></div>) } )}
       </div>
     </>
-  );
-};
+  )
+}
 
 export default CarbonChart

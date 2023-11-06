@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/image';
+import Image from 'next/image'
 
 const Header = () => {
   return (
@@ -8,11 +8,11 @@ const Header = () => {
         <Image src="/logo.png" className="logo" width={370} height={80} alt="" />
       </header>
       <style jsx>{`
-                .header { border-bottom: 1px solid #F8FAFD; }
-                .logo   { height: 60px; }
-            `}</style>
+        .header { border-bottom: 1px solid #F8FAFD; }
+        .logo   { height: 60px; }
+      `}</style>
     </>
   )
 }
 
-export default Header;
+export default Header

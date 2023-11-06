@@ -1,4 +1,4 @@
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps } from 'react'
 
 interface TitleProps {
   text?: string;
@@ -12,6 +12,6 @@ const Title = ({
   ...rest
 }: TitleProps & HTMLProps<HTMLLabelElement>) => (
   <label className={`my-0 pb-12 text-white text-2xl text-center uppercase ${className ?? ''}`} {...rest}>{children||text}</label>
-);
+)
 
-export default Title;
+export default Title

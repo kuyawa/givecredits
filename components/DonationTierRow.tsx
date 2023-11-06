@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Card from './card'
 import Icon from './icon'
 import TextInput from './form/textinput'
-//import getRates from '/utils/rates'
 
 interface DonationTierRowTypes {
   title?: string;
@@ -75,7 +74,7 @@ const DonationTierRow = ({
         </div>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default DonationTierRow;
+export default DonationTierRow
