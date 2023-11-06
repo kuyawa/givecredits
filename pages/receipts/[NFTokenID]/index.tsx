@@ -2,14 +2,14 @@ import { useRouter } from 'next/router';
 //import { useSelector } from 'react-redux';
 import Image from 'next/image';
 
-import Page from '/components/Page';
-import Card from '/components/Card';
-import Divider from '/components/Divider';
+import Page from '/components/page';
+import Card from '/components/card';
+import Divider from '/components/divider';
 //import { sessionOptions } from '/utils/sessionOptions';
 //import { getNFTByNFTokenID } from '/redux/nft/selectors';
 import moment from 'moment';
-import TextRow from '/components/TextRow';
-import BackButton from '/components/BackButton';
+import TextRow from '/components/textrow';
+import BackButton from '/components/backbutton';
 import Session from '/utils/session';
 
 export async function getServerSideProps({ req }){

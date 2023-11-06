@@ -73,6 +73,7 @@ export const createNFT = (body: Dictionary) => postRegistry('nft', body)
 export const getNFTs = (id: string) => fetchRegistry(`nft`)
 export const getAllNFTs = (id: string) => fetchRegistry(`nft`)
 export const getNFTsByAccount = (id: string) => fetchRegistry(`nft?userid=${id}`)
+export const getNFTsByWallet = (id: string) => fetchRegistry(`nft?address=${id}`)
 export const getNFTsByOrganization = (id: string) => fetchRegistry(`nft?orgid=${id}`)
 
 export const newUser = (body: Dictionary) => postRegistry('users', body)

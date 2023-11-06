@@ -1,5 +1,5 @@
 import React, { HTMLAttributes } from 'react';
-import Icon from './Icon';
+import Icon from './icon';
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   text: string;

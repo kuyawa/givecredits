@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import Button from './Button';
+import Button from './button';
 
 const HomeButton = () => {
   const router = useRouter();

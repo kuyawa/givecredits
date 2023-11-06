@@ -1,9 +1,9 @@
 import Link  from 'next/link'
-import Page  from 'components/Page'
-import Card  from 'components/Card'
-import Tile  from 'components/Tile'
+import Page  from 'components/page'
+import Card  from 'components/card'
+import Tile  from 'components/tile'
 import Image from 'next/image'
-//import Button from '../components/Button'
+//import Button from '../components/button'
 
 export default function Home() {
   return (

@@ -1,7 +1,7 @@
 import Link, { LinkProps } from 'next/link';
 import React from 'react';
-import Card from './Card';
-import Icon from './Icon';
+import Card from './card';
+import Icon from './icon';
 
 interface TileTypes {
   text: string;

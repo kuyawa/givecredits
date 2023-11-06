@@ -1,17 +1,17 @@
-//import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { setCookie } from 'cookies-next'
 //import Link from 'next/link'
-import Page from 'components/Page'
-import BackButton from 'components/BackButton'
-import Button from 'components/Button'
-import Card from 'components/Card'
-import Divider from 'components/Divider'
-import Checkbox from 'components/form/Checkbox'
-import TextInput from 'components/form/TextInput'
-//import Spinner from 'components/Spinner'
-import TextRow from 'components/TextRow'
+import Page from 'components/page'
+import BackButton from 'components/backbutton'
+import Button from 'components/button'
+import Card from 'components/card'
+import Divider from 'components/divider'
+import Checkbox from 'components/form/checkbox'
+import TextInput from 'components/form/textinput'
+//import Spinner from 'components/spinner'
+import TextRow from 'components/textrow'
 import { getOrganizationById, getInitiativeById } from 'utils/registry'
 import getRates from 'utils/rates'
 //import PaymentXDR from 'utils/payment'
@@ -55,132 +55,6 @@ export async function getServerSideProps({
   }
 }
 
-function getWalletByChain(wallets, chain){
-  for(let i=0; i<wallets.length; i++){
-    if(wallets[i].chain==chain){
-      return wallets[i]
-    }
-  }
-  return null
-}
-
-async function sendPayment(name, email, organization, initiativeId, amount, currency, issuer, destinTag, yesReceipt, yesNFT){
-  const orgwallet = getWalletByChain(organization.wallets, 'Stellar')
-  if(!orgwallet){
-    $$('message', 'Error: no Stellar wallet for this organization')
-    console.log('Error sending payment, no Stellar wallet')
-    return
-  }
-  $$('message', 'Waiting for confirmation')
-  const destin = orgwallet.address
-  console.log('Sending payment to', destin)
-  await wallet.init()
-  const info = await wallet.connect()
-  const source = info?.account
-  console.log('SOURCE', source)
-  if(!source){
-    $$('message', 'Error: Signature rejected by user')
-    console.log('Error: Signature rejected by user')
-    return
-  }
-  setCookie('wallet', source)
-  const memo = destinTag ? 'tag:'+destinTag : ''
-  //const {txid, xdr} = await PaymentXDR(source, destin, amount, currency, issuer, memo)
-  //console.log('txid', txid, xdr)
-  //wallet.signAndSubmit(xdr, async result=>{
-  const result = await wallet.payment(destin, amount, memo)
-  console.log('UI RESULT', result)
-  if(!result?.success || result?.error){
-   console.log('Error', result.error)
-   $$('message', 'Error sending payment')
-   return
-  }
-  console.log('Result', result)
-  if(result.error){
-    $$('message', 'Error sending payment')
-    return
-  }
-  $$('message', 'Payment sent successfully')
-  if(yesReceipt){
-   sendReceipt(name, email, organization, amount, currency, issuer)
-  }
-  if(yesNFT){
-    //verifyTrustline(source, txid)
-    mintNFT(result.txid, initiativeId, destin)
-  }
-}
-
-async function sendReceipt(name, email, organization, amount, currency, issuer){
-  fetch('/api/receipt', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json; charset=utf8'
-    },
-    body: JSON.stringify({
-      name,
-      email,
-      amount,
-      currency,
-      issuer,
-      orgName:organization.name,
-      orgAddress:organization.address,
-      orgEin:organization.ein
-    })
-  }).then(async (response) => {
-    console.log('Receipt sent')
-    const result = await response.json()
-    console.log('Result', result)
-  }).catch(console.warn)
-}
-
-/*
-async function verifyTrustline(account, txid){
-  // Check trustline
-  $$('message', 'Checking trustline, wait...')
-  const nftCode = process.env.NEXT_PUBLIC_NFT_CODE
-  const nftIssuer = process.env.NEXT_PUBLIC_NFT_ISSUER
-  console.log('ACT:', account)
-  console.log('NFT:', nftCode, nftIssuer)
-  const hasTrustline = await checkTrustline(account, nftCode, nftIssuer)
-  if(hasTrustline){
-    mintNFT(txid)
-  } else {
-    // Add trustline
-    const {trid, xdr} = await trustlineXDR(account, nftCode, nftIssuer)
-    console.log('trid', trid)
-    $$('message', 'Accept trustline in your wallet')
-    wallet.signAndSubmit(xdr, async result=>{
-      console.log('UI RESULT', result)
-      if(result?.error){
-        console.log('Error', result.error)
-        $$('message', 'Error adding trustline')
-        return
-      }
-      console.log('Result', result)
-      $$('message', 'Trustline added successfully')
-      mintNFT(txid)
-    })
-  }
-}
-*/
-
-async function mintNFT(txid,initid,donor){
-  // Mint NFT
-  //const imageuri = 'ipfs:QmdmPTsnJr2AwokcR1QC11s1T3NRUh9PK8jste1ngnuDzT'
-  //const metadata = 'ipfs:Qme4c3dERwN7xNrC7wyDgbxF4bQ5aS9uNwaeXdXbWTeabh'
-  //const imageurl = 'https://gateway.lighthouse.storage/ipfs/QmdmPTsnJr2AwokcR1QC11s1T3NRUh9PK8jste1ngnuDzT'
-  //const metaurl  = 'https://gateway.lighthouse.storage/ipfs/Qme4c3dERwN7xNrC7wyDgbxF4bQ5aS9uNwaeXdXbWTeabh'
-  $$('message', 'Minting NFT, wait...')
-  const minted = await postApi('nft/mint', {txid,initid,donor})
-  console.log('Minted', minted)
-  if(!minted.success){
-    $$('message', 'Error minting NFT')
-    return
-  }
-  $$('message', `NFT sent successfully • <a href="${minted.image}" target="_blank">Image</a> • <a href="${minted.metadata}" target="_blank">Meta</a>`)
-}
-
-
 export default function Donate({
   organization,
   initiative,
@@ -197,8 +71,8 @@ export default function Donate({
   const offsetVal = tonCredit>0 ? (amount / tonCredit) : 0
   //console.log('OFFSET:', offsetVal)
 
+  const { ...router } = useRouter()
   const [confirmed, setConfirmed] = useState(false)
-  //const { ...router } = useRouter()
 
   const { register, watch } = useForm({
     defaultValues: { yesReceipt: false, yesNFT:true, name: '', email: '' }
@@ -217,6 +91,138 @@ export default function Donate({
       sendPayment(name, email, organization, initiativeId, amount, currency, issuer, destinationTag, yesReceipt, yesNFT)
     }
   }, [confirmed, name, email, organization, initiativeId, amount, currency, issuer, destinationTag, yesReceipt, yesNFT])
+
+  function getWalletByChain(wallets, chain){
+    for(let i=0; i<wallets.length; i++){
+      if(wallets[i].chain==chain){
+        return wallets[i]
+      }
+    }
+    return null
+  }
+
+  async function sendPayment(name, email, organization, initiativeId, amount, currency, issuer, destinTag, yesReceipt, yesNFT){
+    const orgwallet = getWalletByChain(organization.wallets, 'Stellar')
+    if(!orgwallet){
+      $$('message', 'Error: no Stellar wallet for this organization')
+      console.log('Error sending payment, no Stellar wallet')
+      return
+    }
+    $$('message', 'Waiting for confirmation')
+    const destin = orgwallet.address
+    console.log('Sending payment to', destin)
+    await wallet.init()
+    const info = await wallet.connect()
+    const source = info?.account
+    console.log('SOURCE', source)
+    if(!source){
+      $$('message', 'Error: Signature rejected by user')
+      console.log('Error: Signature rejected by user')
+      return
+    }
+    setCookie('wallet', source)
+    const memo = destinTag ? 'tag:'+destinTag : ''
+    //const {txid, xdr} = await PaymentXDR(source, destin, amount, currency, issuer, memo)
+    //console.log('txid', txid, xdr)
+    //wallet.signAndSubmit(xdr, async result=>{
+    const result = await wallet.payment(destin, amount, memo)
+    console.log('UI RESULT', result)
+    if(!result?.success || result?.error){
+     console.log('Error', result.error)
+     $$('message', 'Error sending payment')
+     return
+    }
+    console.log('Result', result)
+    if(result.error){
+      $$('message', 'Error sending payment')
+      return
+    }
+    $$('message', 'Payment sent successfully')
+    if(yesReceipt){
+     sendReceipt(name, email, organization, amount, currency, issuer)
+    }
+    if(yesNFT){
+      //verifyTrustline(source, txid)
+      const minted = await mintNFT(result.txid, initiativeId, source, destin)
+      if(minted?.success){
+        router.push(`/donation_confirmation?ok=true&chain=Stellar&txid=${result.txid}&nft=true&nftid=${encodeURIComponent(minted.tokenId)}&urinft=${encodeURIComponent(minted.image)}&urimeta=${encodeURIComponent(minted.metadata)}`)
+      }
+    } else {
+      router.push(`/donation_confirmation?ok=true&chain=Stellar&txid=${result.txid}`)
+    }
+  }
+
+  async function sendReceipt(name, email, organization, amount, currency, issuer){
+    fetch('/api/receipt', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json; charset=utf8'
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        amount,
+        currency,
+        issuer,
+        orgName:organization.name,
+        orgAddress:organization.address,
+        orgEin:organization.ein
+      })
+    }).then(async (response) => {
+      console.log('Receipt sent')
+      const result = await response.json()
+      console.log('Result', result)
+    }).catch(console.warn)
+  }
+
+  /*
+  async function verifyTrustline(account, txid){
+    // Check trustline
+    $$('message', 'Checking trustline, wait...')
+    const nftCode = process.env.NEXT_PUBLIC_NFT_CODE
+    const nftIssuer = process.env.NEXT_PUBLIC_NFT_ISSUER
+    console.log('ACT:', account)
+    console.log('NFT:', nftCode, nftIssuer)
+    const hasTrustline = await checkTrustline(account, nftCode, nftIssuer)
+    if(hasTrustline){
+      mintNFT(txid)
+    } else {
+      // Add trustline
+      const {trid, xdr} = await trustlineXDR(account, nftCode, nftIssuer)
+      console.log('trid', trid)
+      $$('message', 'Accept trustline in your wallet')
+      wallet.signAndSubmit(xdr, async result=>{
+        console.log('UI RESULT', result)
+        if(result?.error){
+          console.log('Error', result.error)
+          $$('message', 'Error adding trustline')
+          return
+        }
+        console.log('Result', result)
+        $$('message', 'Trustline added successfully')
+        mintNFT(txid)
+      })
+    }
+  }
+  */
+
+  async function mintNFT(txid,initid,donor,destin){
+    // Mint NFT
+    //const imageuri = 'ipfs:QmdmPTsnJr2AwokcR1QC11s1T3NRUh9PK8jste1ngnuDzT'
+    //const metadata = 'ipfs:Qme4c3dERwN7xNrC7wyDgbxF4bQ5aS9uNwaeXdXbWTeabh'
+    //const imageurl = 'https://gateway.lighthouse.storage/ipfs/QmdmPTsnJr2AwokcR1QC11s1T3NRUh9PK8jste1ngnuDzT'
+    //const metaurl  = 'https://gateway.lighthouse.storage/ipfs/Qme4c3dERwN7xNrC7wyDgbxF4bQ5aS9uNwaeXdXbWTeabh'
+    $$('message', 'Minting NFT, wait...')
+    const minted = await postApi('nft/mint', {txid,initid,donor,destin})
+    console.log('Minted', minted)
+    if(!minted?.success){
+      $$('message', 'Error minting NFT')
+      return minted
+    }
+    //const txurl = process.env.NEXT_PUBLIC_STELLAR_HORIZON + '/' + txid
+    $$('message', `NFT minted successfully • <a href="${minted.image}" target="_blank">Image</a> • <a href="${minted.metadata}" target="_blank">Meta</a>`)
+    return minted
+  }
 
   return (
     <Page>

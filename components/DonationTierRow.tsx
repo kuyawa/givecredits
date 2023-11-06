@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Image from 'next/image'
-import Card from './Card'
-import Icon from './Icon'
-import TextInput from './form/TextInput'
+import Card from './card'
+import Icon from './icon'
+import TextInput from './form/textinput'
 //import getRates from '/utils/rates'
 
 interface DonationTierRowTypes {

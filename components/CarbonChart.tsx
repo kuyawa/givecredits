@@ -3,42 +3,44 @@ interface ChartType {
   value: number
 }
 
+// https://stackoverflow.com/questions/50960084/how-to-extend-cssproperties-in-react-project
+//const style: { [key: string]: React.CSSProperties } = {
 const style = {
   label: {
     color: '#fff',
-    'text-align': 'center'
+    textAlign: 'center'
   },
   value: {
-    'font-weight': '400',
-    'font-size': '1'
+    fontWeight: '400',
+    fontSize: '1'
   },
   chart: {
     display: 'grid',
-    'grid-template-columns': 'repeat(10, 1fr)',
-    'grid-template-rows': 'repeat(5, 1fr)',
-    'grid-column-gap': '0px',
-    'grid-row-gap': '0px',
+    gridTemplateColumns: 'repeat(10, 1fr)',
+    gridTemplateRows: 'repeat(5, 1fr)',
+    gridColumnGap: '0px',
+    gridRowGap: '0px',
     width: '500px',
     margin: '0 auto'
   },
   ton: {
-    'box-sizing': 'border-box',
+    boxSizing: 'border-box',
     display: 'inline-block',
     width: '40px',
     height: '20px',
     margin: '2px',
     border: '1px solid #666',
-    'border-radius': '6px',
+    borderRadius: '6px',
   },
   off: {
-    'box-sizing': 'border-box',
+    boxSizing: 'border-box',
     display: 'inline-block',
     width: '40px',
     height: '20px',
     margin: '2px',
     border: '1px solid #666',
-    'border-radius': '6px',
-    'background-color': 'green'
+    borderRadius: '6px',
+    backgroundColor: 'green'
   },
   p10: { background: 'linear-gradient(to right, green 0%, green 10%, transparent 10%, transparent 100%)' },
   p20: { background: 'linear-gradient(to right, green 0%, green 20%, transparent 20%, transparent 100%)' },
@@ -49,7 +51,7 @@ const style = {
   p70: { background: 'linear-gradient(to right, green 0%, green 70%, transparent 70%, transparent 100%)' },
   p80: { background: 'linear-gradient(to right, green 0%, green 80%, transparent 80%, transparent 100%)' },
   p90: { background: 'linear-gradient(to right, green 0%, green 90%, transparent 90%, transparent 100%)' }
-}
+} as const
 
 const CarbonChart = ({
   title,

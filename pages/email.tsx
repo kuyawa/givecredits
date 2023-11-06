@@ -1,4 +1,4 @@
-import Page, { PageWrapper } from '../components/Page';
+import Page, { PageWrapper } from '../components/page'
 import Image from 'next/image'
 
 export default function Email() {

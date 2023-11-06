@@ -11,7 +11,7 @@ async function sendTx(tx, secondsToWait, server) {
     console.log('DONE')
     return {raw:sendTransactionResponse, txid};
   }
-  let getTransactionResponse = await server.getTransaction(sendTransactionResponse.hash);
+  let getTransactionResponse = await server.getTransaction(txid);
   const waitUntil = new Date(Date.now() + secondsToWait * 1000).valueOf();
   let waitTime = 1000;
   let exponentialFactor = 1.5;
@@ -22,7 +22,7 @@ async function sendTx(tx, secondsToWait, server) {
     /// Exponential backoff
     waitTime = waitTime * exponentialFactor;
     // See if the transaction is complete
-    getTransactionResponse = await server.getTransaction(sendTransactionResponse.hash);
+    getTransactionResponse = await server.getTransaction(txid);
     console.log('RESTR', getTransactionResponse?.status)
   }
   if (getTransactionResponse.status === SorobanClient.SorobanRpc.GetTransactionStatus.NOT_FOUND) {
@@ -31,12 +31,12 @@ async function sendTx(tx, secondsToWait, server) {
       `Returning anyway. Check the transaction status manually. ` +
       `Info: ${JSON.stringify(sendTransactionResponse, null, 2)}`);
   }
-  console.log('RESOK')
+  console.log('RESRET')
   return {raw:getTransactionResponse, txid}
 }
 
 export default async function invoke({ method, args = [], fee = 100, responseType, parseResultXdr, secondsToWait = 10, rpcUrl, networkPassphrase, contractId, wallet, }) {
-  //console.log('DATA', JSON.stringify({ method, args, fee, responseType, parseResultXdr, secondsToWait, rpcUrl, networkPassphrase, contractId, wallet }, null, 2))
+  console.log('DATA', JSON.stringify({ method, args, fee, responseType, parseResultXdr, secondsToWait, rpcUrl, networkPassphrase, contractId, wallet }, null, 2))
   let parse = parseResultXdr
   const server = new SorobanClient.Server(rpcUrl, {allowHttp: rpcUrl.startsWith("http://")})
   const signer = SorobanClient.Keypair.fromSecret(process.env.CFCE_MINTER_WALLET_SECRET)
@@ -101,11 +101,15 @@ export default async function invoke({ method, args = [], fee = 100, responseTyp
     //const env  = new SorobanClient.xdr.TransactionEnvelope(raw.envelopeXdr)
     //console.log('RES')
     //const res  = new SorobanClient.xdr.TransactionResult(raw.resultXdr)
-    //console.log('META')
-    //const meta = new SorobanClient.xdr.TransactionMeta(raw.resultMetaXdr)
+    console.log('META')
+    const meta = new SorobanClient.xdr.TransactionMetaV3(raw.resultMetaXdr)
+    //const tokenid = '0'
+    const lastid = meta?._attributes?._value?._attributes?.sorobanMeta?._attributes?.events[0]?._attributes?.body?._value?._attributes?.data?._value?._attributes?.lo?._value?.toString() || ''
+    const tokenid = contractId + ' #' + lastid
+    console.log('TOKENID', tokenid)
     //const parsed = parse(raw.resultXdr.result().toXDR("base64"));
     //console.log('PARSED', env, res, meta)
-    return {result:raw, txid, success:true}
+    return {result:raw, txid, success:true, tokenid}
   }
   // otherwise, it returned the result of `sendTransaction`
   if ("errorResult" in raw) {

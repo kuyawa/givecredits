@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import Page from 'components/Page'
-import BackButton from 'components/BackButton'
-import OrganizationList from 'components/OrganizationList'
+import Page from 'components/page'
+import BackButton from 'components/backbutton'
+import OrganizationList from 'components/organizationlist'
 import { Organization as OrganizationType } from 'types/registryTypes'
 import { getOrganizations } from 'utils/registry'
 

@@ -2,12 +2,12 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link';
 import Image from 'next/image';
-import Page from 'components/Page'
+import Page from 'components/page'
 //import Card from 'components/Card'
-import BackButton from 'components/BackButton'
-import DonationTierRow from 'components/DonationTierRow'
-import CarbonChart from 'components/CarbonChart'
-import TextRow from 'components/TextRow'
+import BackButton from 'components/backbutton'
+import DonationTierRow from 'components/donationtierrow'
+import CarbonChart from 'components/carbonchart'
+import TextRow from 'components/textrow'
 import { getOrganizationById } from 'utils/registry'
 import Session from 'utils/session'
 import getRates from 'utils/rates'

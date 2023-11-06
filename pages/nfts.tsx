@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Page from 'components/Page'
-import Card from 'components/Card'
-import BackButton from 'components/BackButton'
-import { getNFTsByAccount } from 'utils/registry'
+import Page from 'components/page'
+import Card from 'components/card'
+import BackButton from 'components/backbutton'
+import { getNFTsByWallet } from 'utils/registry'
 import { getCookie } from 'cookies-next'
 
 export async function getServerSideProps(context) {
@@ -16,7 +16,8 @@ export async function getServerSideProps(context) {
     wallet = getCookie('wallet', { req, res }) ?? null // check cookies just in case
   }
   console.log('Wallet:', wallet)
-  const NFTs = await getNFTsByAccount(wallet) || []
+  const NFTs = await getNFTsByWallet(wallet) || []
+  //const NFTs = await getNFTsByAccount(wallet) || []
   //console.log({ NFTs })
   return {
     props: { wallet, NFTs }
@@ -71,7 +72,6 @@ export default function ViewNFTs(props) {
           }
         }
         const impactUrl = item.initiative?.id ? '/impact/'+item.initiative?.id : null
-
         return (
           <Card key={item.tokenId} onClick={() => null}>
             <div className="flex flex-row justify-between items-center w-full">
@@ -81,8 +81,8 @@ export default function ViewNFTs(props) {
               <div className="flex flex-col justify-start items-start text-slate-50 text-2xl p-6 w-full">
                 <small className="text-sm text-slate-400">{new Date(item.created).toLocaleString()}</small>
                 <h1 className="text-xl">{item.organization.name}</h1>
-                <h2 className="text-xl text-slate-400">{item.initiative?.title || 'A Happy Donation'}</h2>
-                <h3 className="text-base">{impactUrl ? <Link className="text-slate-400" href={impactUrl} target="_blank">See the impact storyline &raquo;</Link> : <>No Impact storyline yet</>}</h3>
+                <h2 className="text-xl text-left text-slate-400">{item.initiative?.title || 'A Happy Donation'}</h2>
+                <h3 className="text-base">{impactUrl ? <Link className="text-slate-400" href={impactUrl}>See the impact storyline &raquo;</Link> : <>No Impact storyline yet</>}</h3>
                 <h3 className="text-base">Thank you for your donation</h3>
                 <small className="text-base">{item.coinValue} {item.coinSymbol} • {item.usdValue} USD</small>
               </div>
