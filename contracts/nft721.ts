@@ -227,4 +227,3 @@ export class Contract {
     return res
   }
 }
-

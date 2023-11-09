@@ -102,8 +102,10 @@ export default async function invoke({ method, args = [], fee = 100, responseTyp
     //console.log('RES')
     //const res  = new SorobanClient.xdr.TransactionResult(raw.resultXdr)
     console.log('META')
+    //const meta = raw.resultMetaXdr
+    //const retn = meta.v3().sorobanMeta().returnValue()
+    //const evts = meta.v3().sorobanMeta().events()
     const meta = new SorobanClient.xdr.TransactionMetaV3(raw.resultMetaXdr)
-    //const tokenid = '0'
     const lastid = meta?._attributes?._value?._attributes?.sorobanMeta?._attributes?.events[0]?._attributes?.body?._value?._attributes?.data?._value?._attributes?.lo?._value?.toString() || ''
     const tokenid = contractId + ' #' + lastid
     console.log('TOKENID', tokenid)
