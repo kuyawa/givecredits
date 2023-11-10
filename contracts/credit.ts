@@ -3,16 +3,17 @@ import invoke from './invoker'
 
 export const Networks = {
   futurenet: {
-    contractId: 'CCYG64O6BJYNT5IZ7ANYNHW4UJ5V2T5XJLRRJMELLSR2W3LHX3PISUKI',
+    contractId: 'CCBSSVTHA4MNDD2ILKK32ORL2OYLIRN2OLANP2MZNJW2OEJMOFNDEVK5',
     networkPassphrase: 'Test SDF Future Network ; October 2022',
     rpcUrl: 'https://rpc-futurenet.stellar.org:443'
   },
   testnet: {
-    contractId: 'CCYG64O6BJYNT5IZ7ANYNHW4UJ5V2T5XJLRRJMELLSR2W3LHX3PISUKI',
+    contractId: 'CCBSSVTHA4MNDD2ILKK32ORL2OYLIRN2OLANP2MZNJW2OEJMOFNDEVK5',
     networkPassphrase: 'Test SDF Network ; September 2015',
     rpcUrl: 'https://soroban-testnet.stellar.org'
   }
 };
+
 
 export class Contract {
   options;
@@ -20,49 +21,54 @@ export class Contract {
   constructor(options) {
     this.options = options;
     this.spec = new SorobanClient.ContractSpec([
-      "AAAAAAAAAAAAAAAKaW5pdGlhbGl6ZQAAAAAABQAAAAAAAAAFYWRtaW4AAAAAAAATAAAAAAAAAAppbml0aWF0aXZlAAAAAAAKAAAAAAAAAAhwcm92aWRlcgAAABMAAAAAAAAABmJ1Y2tldAAAAAAACwAAAAAAAAADeGxtAAAAABMAAAAA",
+      "AAAAAAAAAAAAAAAKaW5pdGlhbGl6ZQAAAAAABgAAAAAAAAAFYWRtaW4AAAAAAAATAAAAAAAAAAppbml0aWF0aXZlAAAAAAAKAAAAAAAAAAhwcm92aWRlcgAAABMAAAAAAAAABnZlbmRvcgAAAAAAEwAAAAAAAAAGYnVja2V0AAAAAAALAAAAAAAAAAN4bG0AAAAAEwAAAAA=",
       "AAAAAAAAAAAAAAAGZG9uYXRlAAAAAAACAAAAAAAAAARmcm9tAAAAEwAAAAAAAAAGYW1vdW50AAAAAAALAAAAAA==",
       "AAAAAAAAAAAAAAAIZ2V0QWRtaW4AAAAAAAAAAQAAABM=",
       "AAAAAAAAAAAAAAAKZ2V0QmFsYW5jZQAAAAAAAAAAAAEAAAAL",
+      "AAAAAAAAAAAAAAASZ2V0Q29udHJhY3RCYWxhbmNlAAAAAAAAAAAAAQAAAAs=",
       "AAAAAAAAAAAAAAAJZ2V0QnVja2V0AAAAAAAAAAAAAAEAAAAL",
       "AAAAAAAAAAAAAAAHZ2V0RmVlcwAAAAAAAAAAAQAAAAs=",
       "AAAAAAAAAAAAAAANZ2V0SW5pdGlhdGl2ZQAAAAAAAAAAAAABAAAACg==",
       "AAAAAAAAAAAAAAAKZ2V0TWluaW11bQAAAAAAAAAAAAEAAAAL",
       "AAAAAAAAAAAAAAALZ2V0UHJvdmlkZXIAAAAAAAAAAAEAAAAT",
+      "AAAAAAAAAAAAAAAPZ2V0UHJvdmlkZXJGZWVzAAAAAAAAAAABAAAACw==",
       "AAAAAAAAAAAAAAALZ2V0VHJlYXN1cnkAAAAAAAAAAAEAAAAT",
+      "AAAAAAAAAAAAAAAJZ2V0VmVuZG9yAAAAAAAAAAAAAAEAAAAT",
+      "AAAAAAAAAAAAAAANZ2V0VmVuZG9yRmVlcwAAAAAAAAAAAAABAAAACw==",
       "AAAAAAAAAAAAAAAGZ2V0WExNAAAAAAAAAAAAAQAAABM=",
       "AAAAAAAAAAAAAAAIc2V0QWRtaW4AAAABAAAAAAAAAAZuZXd2YWwAAAAAABMAAAAA",
       "AAAAAAAAAAAAAAAJc2V0QnVja2V0AAAAAAAAAQAAAAAAAAAGbmV3dmFsAAAAAAALAAAAAA==",
       "AAAAAAAAAAAAAAAHc2V0RmVlcwAAAAABAAAAAAAAAAZuZXd2YWwAAAAAAAsAAAAA",
       "AAAAAAAAAAAAAAAKc2V0TWluaW11bQAAAAAAAQAAAAAAAAAGbmV3dmFsAAAAAAALAAAAAA==",
       "AAAAAAAAAAAAAAALc2V0UHJvdmlkZXIAAAAAAQAAAAAAAAAGbmV3dmFsAAAAAAATAAAAAA==",
+      "AAAAAAAAAAAAAAAPc2V0UHJvdmlkZXJGZWVzAAAAAAEAAAAAAAAABm5ld3ZhbAAAAAAACwAAAAA=",
       "AAAAAAAAAAAAAAALc2V0VHJlYXN1cnkAAAAAAQAAAAAAAAAGbmV3dmFsAAAAAAATAAAAAA==",
+      "AAAAAAAAAAAAAAAJc2V0VmVuZG9yAAAAAAAAAQAAAAAAAAAGbmV3dmFsAAAAAAATAAAAAA==",
+      "AAAAAAAAAAAAAAANc2V0VmVuZG9yRmVlcwAAAAAAAAEAAAAAAAAABm5ld3ZhbAAAAAAACwAAAAA=",
       "AAAAAAAAAAAAAAAGc2V0WExNAAAAAAABAAAAAAAAAAZuZXd2YWwAAAAAABMAAAAA",
-      "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAACQAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAHQmFsYW5jZQAAAAAAAAAAAAAAAAZCdWNrZXQAAAAAAAAAAAAAAAAABEZlZXMAAAAAAAAAAAAAAApJbml0aWF0aXZlAAAAAAAAAAAAAAAAAAdNaW5pbXVtAAAAAAAAAAAAAAAACFByb3ZpZGVyAAAAAAAAAAAAAAAIVHJlYXN1cnkAAAAAAAAAAAAAAANYTE0A"
+      "AAAAAgAAAAAAAAAAAAAAB0RhdGFLZXkAAAAADAAAAAAAAAAAAAAABUFkbWluAAAAAAAAAAAAAAAAAAAHQmFsYW5jZQAAAAAAAAAAAAAAAAZCdWNrZXQAAAAAAAAAAAAAAAAABEZlZXMAAAAAAAAAAAAAAApJbml0aWF0aXZlAAAAAAAAAAAAAAAAAAdNaW5pbXVtAAAAAAAAAAAAAAAACFByb3ZpZGVyAAAAAAAAAAAAAAAMUHJvdmlkZXJGZWVzAAAAAAAAAAAAAAAGVmVuZG9yAAAAAAAAAAAAAAAAAApWZW5kb3JGZWVzAAAAAAAAAAAAAAAAAAhUcmVhc3VyeQAAAAAAAAAAAAAAA1hMTQA="
     ]);
   }
-  async initialize({ admin, initiative, provider, bucket, xlm }, options = {}) {
-    const res = await invoke({
+  async initialize({ admin, initiative, provider, vendor, bucket, xlm }, options = {}) {
+    return await invoke({
       method: 'initialize',
-      args: this.spec.funcArgsToScVals("initialize", { admin, initiative, provider, bucket, xlm }),
+      args: this.spec.funcArgsToScVals("initialize", { admin, initiative, provider, vendor, bucket, xlm }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async donate({ from, amount }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'donate',
       args: this.spec.funcArgsToScVals("donate", { from, amount }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async getAdmin(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getAdmin',
       args: this.spec.funcArgsToScVals("getAdmin", {}),
       ...options,
@@ -71,10 +77,9 @@ export class Contract {
         return this.spec.funcResToNative("getAdmin", xdr);
       },
     });
-    return res
   }
   async getBalance(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getBalance',
       args: this.spec.funcArgsToScVals("getBalance", {}),
       ...options,
@@ -83,10 +88,20 @@ export class Contract {
         return this.spec.funcResToNative("getBalance", xdr);
       },
     });
-    return res
+  }
+  async getContractBalance(options = {}) {
+    return await invoke({
+      method: 'getContractBalance',
+      args: this.spec.funcArgsToScVals("getContractBalance", {}),
+      ...options,
+      ...this.options,
+      parseResultXdr: (xdr) => {
+        return this.spec.funcResToNative("getContractBalance", xdr);
+      },
+    });
   }
   async getBucket(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getBucket',
       args: this.spec.funcArgsToScVals("getBucket", {}),
       ...options,
@@ -95,10 +110,9 @@ export class Contract {
         return this.spec.funcResToNative("getBucket", xdr);
       },
     });
-    return res
   }
   async getFees(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getFees',
       args: this.spec.funcArgsToScVals("getFees", {}),
       ...options,
@@ -107,10 +121,9 @@ export class Contract {
         return this.spec.funcResToNative("getFees", xdr);
       },
     });
-    return res
   }
   async getInitiative(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getInitiative',
       args: this.spec.funcArgsToScVals("getInitiative", {}),
       ...options,
@@ -119,10 +132,9 @@ export class Contract {
         return this.spec.funcResToNative("getInitiative", xdr);
       },
     });
-    return res
   }
   async getMinimum(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getMinimum',
       args: this.spec.funcArgsToScVals("getMinimum", {}),
       ...options,
@@ -131,10 +143,9 @@ export class Contract {
         return this.spec.funcResToNative("getMinimum", xdr);
       },
     });
-    return res
   }
   async getProvider(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getProvider',
       args: this.spec.funcArgsToScVals("getProvider", {}),
       ...options,
@@ -143,10 +154,20 @@ export class Contract {
         return this.spec.funcResToNative("getProvider", xdr);
       },
     });
-    return res
+  }
+  async getProviderFees(options = {}) {
+    return await invoke({
+      method: 'getProviderFees',
+      args: this.spec.funcArgsToScVals("getProviderFees", {}),
+      ...options,
+      ...this.options,
+      parseResultXdr: (xdr) => {
+        return this.spec.funcResToNative("getProviderFees", xdr);
+      },
+    });
   }
   async getTreasury(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getTreasury',
       args: this.spec.funcArgsToScVals("getTreasury", {}),
       ...options,
@@ -155,10 +176,31 @@ export class Contract {
         return this.spec.funcResToNative("getTreasury", xdr);
       },
     });
-    return res
+  }
+  async getVendor(options = {}) {
+    return await invoke({
+      method: 'getVendor',
+      args: this.spec.funcArgsToScVals("getVendor", {}),
+      ...options,
+      ...this.options,
+      parseResultXdr: (xdr) => {
+        return this.spec.funcResToNative("getVendor", xdr);
+      },
+    });
+  }
+  async getVendorFees(options = {}) {
+    return await invoke({
+      method: 'getVendorFees',
+      args: this.spec.funcArgsToScVals("getVendorFees", {}),
+      ...options,
+      ...this.options,
+      parseResultXdr: (xdr) => {
+        return this.spec.funcResToNative("getVendorFees", xdr);
+      },
+    });
   }
   async getXlm(options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'getXLM',
       args: this.spec.funcArgsToScVals("getXLM", {}),
       ...options,
@@ -167,76 +209,96 @@ export class Contract {
         return this.spec.funcResToNative("getXLM", xdr);
       },
     });
-    return res
   }
   async setAdmin({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setAdmin',
       args: this.spec.funcArgsToScVals("setAdmin", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async setBucket({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setBucket',
       args: this.spec.funcArgsToScVals("setBucket", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async setFees({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setFees',
       args: this.spec.funcArgsToScVals("setFees", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async setMinimum({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setMinimum',
       args: this.spec.funcArgsToScVals("setMinimum", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
   async setProvider({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setProvider',
       args: this.spec.funcArgsToScVals("setProvider", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
+  }
+  async setProviderFees({ newval }, options = {}) {
+    return await invoke({
+      method: 'setProviderFees',
+      args: this.spec.funcArgsToScVals("setProviderFees", { newval }),
+      ...options,
+      ...this.options,
+      parseResultXdr: () => { },
+    });
   }
   async setTreasury({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setTreasury',
       args: this.spec.funcArgsToScVals("setTreasury", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
+  }
+  async setVendor({ newval }, options = {}) {
+    return await invoke({
+      method: 'setVendor',
+      args: this.spec.funcArgsToScVals("setVendor", { newval }),
+      ...options,
+      ...this.options,
+      parseResultXdr: () => { },
+    });
+  }
+  async setVendorFees({ newval }, options = {}) {
+    return await invoke({
+      method: 'setVendorFees',
+      args: this.spec.funcArgsToScVals("setVendorFees", { newval }),
+      ...options,
+      ...this.options,
+      parseResultXdr: () => { },
+    });
   }
   async setXlm({ newval }, options = {}) {
-    const res = await invoke({
+    return await invoke({
       method: 'setXLM',
       args: this.spec.funcArgsToScVals("setXLM", { newval }),
       ...options,
       ...this.options,
       parseResultXdr: () => { },
     });
-    return res
   }
 }
+

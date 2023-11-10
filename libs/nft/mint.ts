@@ -24,7 +24,7 @@ export default async function mint(adr, uri){
   const res = await contract.mint({to:adr})
   console.log('OK?', res?.success)
   console.log('TXID', res?.txid)
-  console.log('TOKENID', res?.tokenid)
+  //console.log('TOKENID', res?.tokenid)
   // https://horizon-futurenet.stellar.org/transactions/1308c09ac21ef54c45b219d53fcb97ab9048e662d06a56af2407bcab63ebea86
   //{
   //  status: 'PENDING',
