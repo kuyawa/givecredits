@@ -9,7 +9,10 @@ use crate::storage::{
   read_initiative, write_initiative,
   read_minimum, write_minimum,
   read_provider, write_provider,
+  read_provider_fees, write_provider_fees,
   read_treasury, write_treasury,
+  read_vendor, write_vendor,
+  read_vendor_fees, write_vendor_fees,
   read_xlm, write_xlm,
 };
 use soroban_sdk::{contract, contractimpl, token, Address, Env};
@@ -22,7 +25,7 @@ pub struct Credits;
 
 #[contractimpl]
 impl Credits {
-  pub fn initialize(e: Env, admin: Address, initiative: u128, provider: Address, bucket: i128, xlm: Address) {
+  pub fn initialize(e: Env, admin: Address, initiative: u128, provider: Address, vendor: Address, bucket: i128, xlm: Address) {
     if has_administrator(&e) { panic!("already initialized") }
     write_administrator(&e, &admin);
     write_balance(&e, 0);
@@ -31,7 +34,10 @@ impl Credits {
     write_initiative(&e, initiative);
     write_minimum(&e, 10000000);
     write_provider(&e, &provider);
+    write_provider_fees(&e, 80);
     write_treasury(&e, &admin);
+    write_vendor(&e, &vendor);
+    write_vendor_fees(&e, 10);
     write_xlm(&e, &xlm);
   }
 
@@ -44,10 +50,15 @@ impl Credits {
     from.require_auth();
     let thisctr = &e.current_contract_address();
     let provider = read_provider(&e);
+    let providerFees = read_provider_fees(&e);
+    let vendorFees = read_vendor_fees(&e);
+    //let ourFees = read_fees(&e);
     let balance = read_balance(&e);
     let bucket = read_bucket(&e);
-    let fees = (amount * read_fees(&e) / 100) as i128;
-    let diff = amount - fees;
+    let pfees = (amount * providerFees / 100) as i128;
+    let vfees = (amount * vendorFees / 100) as i128;
+    let fees = amount - pfees - vfees; // get diff instead of calc to avoid rounding errors
+    //let fees = (amount * ourFees / 100) as i128;
     instance_bump(&e);
     let xlm = token::Client::new(&e, &read_xlm(&e));
     xlm.transfer(&from, &thisctr, &amount); // From donor to contract
@@ -55,7 +66,11 @@ impl Credits {
       let treasury = read_treasury(&e);
       xlm.transfer(&thisctr, &treasury, &fees); // Fees from contract to treasury
     }
-    let newbalance = balance + diff;
+    if vfees > 0 {
+      let vendor = read_vendor(&e);
+      xlm.transfer(&thisctr, &vendor, &fees); // Fees from contract to vendor
+    }
+    let newbalance = balance + pfees; // Accumulate carbon credits
     if newbalance >= bucket {
       let reminder = newbalance % bucket;
       let credits  = newbalance - reminder;
@@ -75,6 +90,11 @@ impl Credits {
 
   pub fn getBalance(e: Env) -> i128 {
     read_balance(&e)
+  }
+
+  pub fn getContractBalance(e: Env) -> i128 {
+    let xlm = token::Client::new(&e, &read_xlm(&e));
+    xlm.balance(&e.current_contract_address())
   }
 
   pub fn getBucket(e: Env) -> i128 {
@@ -97,8 +117,20 @@ impl Credits {
     read_provider(&e)
   }
 
+  pub fn getProviderFees(e: Env) -> i128 {
+    read_provider_fees(&e)
+  }
+
   pub fn getTreasury(e: Env) -> Address {
     read_treasury(&e)
+  }
+
+  pub fn getVendor(e: Env) -> Address {
+    read_vendor(&e)
+  }
+
+  pub fn getVendorFees(e: Env) -> i128 {
+    read_vendor_fees(&e)
   }
 
   pub fn getXLM(e: Env) -> Address {
@@ -147,12 +179,36 @@ impl Credits {
     events::provider(&e, oldval, newval);
   }
 
+  pub fn setProviderFees(e: Env, newval: i128) {
+    check_admin(&e);
+    instance_bump(&e);
+    let oldval = read_provider_fees(&e);
+    write_provider_fees(&e, newval);
+    events::providerFees(&e, oldval, newval);
+  }
+
   pub fn setTreasury(e: Env, newval: Address) {
     check_admin(&e);
     instance_bump(&e);
     let oldval = read_treasury(&e);
     write_treasury(&e, &newval);
     events::treasury(&e, oldval, newval);
+  }
+
+  pub fn setVendor(e: Env, newval: Address) {
+    check_admin(&e);
+    instance_bump(&e);
+    let oldval = read_vendor(&e);
+    write_vendor(&e, &newval);
+    events::vendor(&e, oldval, newval);
+  }
+
+  pub fn setVendorFees(e: Env, newval: i128) {
+    check_admin(&e);
+    instance_bump(&e);
+    let oldval = read_vendor_fees(&e);
+    write_vendor_fees(&e, newval);
+    events::vendorFees(&e, oldval, newval);
   }
 
   pub fn setXLM(e: Env, newval: Address) {

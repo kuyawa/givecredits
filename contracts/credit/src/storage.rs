@@ -18,6 +18,9 @@ pub enum DataKey {
     Initiative,
     Minimum,
     Provider,
+    ProviderFees,
+    Vendor,
+    VendorFees,
     Treasury,
     XLM
 }
@@ -124,6 +127,20 @@ pub fn write_provider(e: &Env, value: &Address) {
   e.storage().instance().set(&key, &value);
 }
 
+pub fn read_provider_fees(e: &Env) -> i128 {
+  let key = DataKey::ProviderFees;
+  let val = e.storage().instance().get(&key);
+  match val {
+    Some(amount) => amount,
+    None => 0
+  }
+}
+
+pub fn write_provider_fees(e: &Env, value: i128) {
+  let key = DataKey::ProviderFees;
+  e.storage().instance().set(&key, &value);
+}
+
 pub fn read_treasury(e: &Env) -> Address {
   let key = DataKey::Treasury;
   let val = e.storage().instance().get(&key);
@@ -135,6 +152,34 @@ pub fn read_treasury(e: &Env) -> Address {
 
 pub fn write_treasury(e: &Env, value: &Address) {
   let key = DataKey::Treasury;
+  e.storage().instance().set(&key, &value);
+}
+
+pub fn read_vendor(e: &Env) -> Address {
+  let key = DataKey::Vendor;
+  let val = e.storage().instance().get(&key);
+  match val {
+    Some(addr) => addr,
+    None => zero_address(&e)
+  }
+}
+
+pub fn write_vendor(e: &Env, value: &Address) {
+  let key = DataKey::Vendor;
+  e.storage().instance().set(&key, &value);
+}
+
+pub fn read_vendor_fees(e: &Env) -> i128 {
+  let key = DataKey::VendorFees;
+  let val = e.storage().instance().get(&key);
+  match val {
+    Some(amount) => amount,
+    None => 0
+  }
+}
+
+pub fn write_vendor_fees(e: &Env, value: i128) {
+  let key = DataKey::VendorFees;
   e.storage().instance().set(&key, &value);
 }
 

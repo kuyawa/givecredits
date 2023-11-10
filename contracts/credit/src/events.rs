@@ -30,6 +30,11 @@ pub(crate) fn provider(e: &Env, oldValue: Address, newValue: Address) {
   let topics = (symbol_short!("provider"), symbol_short!("change"));
   e.events().publish(topics, (oldValue, newValue));
 }
+
+pub(crate) fn providerFees(e: &Env, oldValue: i128, newValue: i128) {
+  let topics = (symbol_short!("provfees"), symbol_short!("change"));
+  e.events().publish(topics, (oldValue, newValue));
+}
 /*
 pub(crate) fn transfer(e: &Env, from: Address, destin: Address, amount: i128) {
   let topics = (symbol_short!("transfer"), from, destin);
@@ -38,6 +43,16 @@ pub(crate) fn transfer(e: &Env, from: Address, destin: Address, amount: i128) {
 */
 pub(crate) fn treasury(e: &Env, oldValue: Address, newValue: Address) {
   let topics = (symbol_short!("treasury"), symbol_short!("change"));
+  e.events().publish(topics, (oldValue, newValue));
+}
+
+pub(crate) fn vendor(e: &Env, oldValue: Address, newValue: Address) {
+  let topics = (symbol_short!("vendor"), symbol_short!("change"));
+  e.events().publish(topics, (oldValue, newValue));
+}
+
+pub(crate) fn vendorFees(e: &Env, oldValue: i128, newValue: i128) {
+  let topics = (symbol_short!("vendfees"), symbol_short!("change"));
   e.events().publish(topics, (oldValue, newValue));
 }
 /*
