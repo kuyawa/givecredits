@@ -64,11 +64,11 @@ impl Credits {
     xlm.transfer(&from, &thisctr, &amount); // From donor to contract
     if fees > 0 {
       let treasury = read_treasury(&e);
-      xlm.transfer(&thisctr, &treasury, &fees); // Fees from contract to treasury
+      xlm.transfer(&thisctr, &treasury, &fees); // Our fees from contract to treasury
     }
     if vfees > 0 {
       let vendor = read_vendor(&e);
-      xlm.transfer(&thisctr, &vendor, &fees); // Fees from contract to vendor
+      xlm.transfer(&thisctr, &vendor, &vfees); // Vendor fees from contract to vendor
     }
     let newbalance = balance + pfees; // Accumulate carbon credits
     if newbalance >= bucket {

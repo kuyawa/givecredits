@@ -17,7 +17,7 @@ export async function getServerSideProps(context) {
   }
   console.log('Wallet:', wallet)
   const NFTs = await getNFTsByWallet(wallet) || []
-  //const NFTs = await getNFTsByAccount(wallet) || []
+  NFTs.sort((n1, n2) => (n1.created < n2.created ? 1 : -1));
   //console.log({ NFTs })
   return {
     props: { wallet, NFTs }

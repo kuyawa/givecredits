@@ -1,14 +1,14 @@
 import * as SorobanClient from 'soroban-client'
-import invoke from './invoker'
+import {invoke} from 'utils/invokeContractClient'
 
 export const Networks = {
   futurenet: {
-    contractId: 'CCBSSVTHA4MNDD2ILKK32ORL2OYLIRN2OLANP2MZNJW2OEJMOFNDEVK5',
+    contractId: 'CCHJXOOUDFHM6CKNNQ6ZT3GGVU3UPBDDMYUGOW7CMRYBCEWAAOQNSHQW',
     networkPassphrase: 'Test SDF Future Network ; October 2022',
     rpcUrl: 'https://rpc-futurenet.stellar.org:443'
   },
   testnet: {
-    contractId: 'CCBSSVTHA4MNDD2ILKK32ORL2OYLIRN2OLANP2MZNJW2OEJMOFNDEVK5',
+    contractId: 'CCHJXOOUDFHM6CKNNQ6ZT3GGVU3UPBDDMYUGOW7CMRYBCEWAAOQNSHQW',
     networkPassphrase: 'Test SDF Network ; September 2015',
     rpcUrl: 'https://soroban-testnet.stellar.org'
   }
@@ -19,6 +19,7 @@ export class Contract {
   options;
   spec;
   constructor(options) {
+    console.log('OPTIONS', options)
     this.options = options;
     this.spec = new SorobanClient.ContractSpec([
       "AAAAAAAAAAAAAAAKaW5pdGlhbGl6ZQAAAAAABgAAAAAAAAAFYWRtaW4AAAAAAAATAAAAAAAAAAppbml0aWF0aXZlAAAAAAAKAAAAAAAAAAhwcm92aWRlcgAAABMAAAAAAAAABnZlbmRvcgAAAAAAEwAAAAAAAAAGYnVja2V0AAAAAAALAAAAAAAAAAN4bG0AAAAAEwAAAAA=",
@@ -59,12 +60,24 @@ export class Contract {
     });
   }
   async donate({ from, amount }, options = {}) {
+    console.log('ARGS', from, amount)
     return await invoke({
       method: 'donate',
       args: this.spec.funcArgsToScVals("donate", { from, amount }),
       ...options,
       ...this.options,
-      parseResultXdr: () => { },
+      parseResultXdr: (metaXdr) => {
+        // TODO: get xdr meta response and parse logs
+        //const meta = new SorobanClient.xdr.TransactionMetaV3(metaXdr)
+        //console.log('META', meta)
+        const meta = new SorobanClient.xdr.TransactionResultMeta(metaXdr)
+        console.log('META', meta)
+        //const retn = meta.v3().sorobanMeta().returnValue()
+        //const evts = meta.v3().sorobanMeta().events()
+        //console.log('EVENTS', evts)
+        return 'OK'
+      },
+      parseMeta: true
     });
   }
   async getAdmin(options = {}) {

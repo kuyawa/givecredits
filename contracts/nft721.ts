@@ -86,7 +86,19 @@ export class Contract {
       args: this.spec.funcArgsToScVals("mint", { to }),
       ...options,
       ...this.options,
-      parseResultXdr: () => { },
+      parseResultXdr: (metaXdr) => {
+        // Parse meta xdr and return tokenId
+        console.log('META')
+        //const meta = new SorobanClient.xdr.TransactionMetaV3(metaXdr)
+        //const retn = meta.v3().sorobanMeta().returnValue()
+        //const evts = meta.v3().sorobanMeta().events()
+        const meta:any = new SorobanClient.xdr.TransactionResultMeta(metaXdr)
+        const lastId = meta?._attributes?._value?._attributes?.sorobanMeta?._attributes?.events[0]?._attributes?.body?._value?._attributes?.data?._value?._attributes?.lo?._value?.toString() || ''
+        const tokenId = this.options.contractId + ' #' + lastId
+        console.log('TOKENID', tokenId)
+        return tokenId
+      },
+      parseMeta: true
     });
     return res
   }

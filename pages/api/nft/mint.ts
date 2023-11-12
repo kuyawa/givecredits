@@ -2,9 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import upload from 'libs/nft/upload'
 import mint from 'libs/nft/mint'
 import fetchLedger from 'libs/server/fetchLedger'
-import { getUserByWallet, getOrganizationsByWallet, getInitiativeByTag, createNFT } from 'utils/registry'
+import { getUserByWallet, getOrganizationById, getInitiativeById, createNFT } from 'utils/registry'
 import getRates from 'utils/rates'
 
+/*
 function getTagFromMemo(memo){
   if(!memo) return ''
   const parts = memo.split(':')  // tag:84
@@ -13,17 +14,16 @@ function getTagFromMemo(memo){
   }
   return ''
 }
-
+*/
 
 // POST /api/nft/mint {paymentId}
 // On donation:
 //   Upload metadata to permanent storage
 //   Mint nft with uri:metadata and get token Id
-//   Create offer Id for NFT transfer
-//   Send tokenId, offerId to client
+//   Send tokenId to client
 export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const {txid,initid,donor,destin} = req.body
+    const {txid, initid, donor, destin, amount} = req.body
     console.log('BODY', txid, initid, donor, destin)
 
     // Get tx info
@@ -39,76 +39,98 @@ export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
     console.log('TXINFO', txInfo)
     const page = BigInt(txInfo.paging_token) + BigInt(1)
     const opid = page.toString()
-    const tag  = getTagFromMemo(txInfo.memo)
+    //const tag  = getTagFromMemo(txInfo.memo)
 
     // Get op info
     const opInfo = await fetchLedger('/operations/'+opid)
-    if(!opInfo || opInfo.status==404) {
+    console.log('OPINFO', opInfo)
+    if(!opInfo || opInfo?.status==404) {
       console.log('ERROR', 'Operation not found')
       return res.status(500).json({ error: 'Operation info not found' })
     }
-    if(!opInfo.transaction_successful) {
+    if(!opInfo?.transaction_successful) {
       console.log('ERROR', 'Transaction not valid')
       return res.status(500).json({ error: 'Transaction not valid' })
     }
-    console.log('OPINFO', opInfo)
-    if(donor!==opInfo.from){
+    if(donor!==opInfo?.source_account){
       return res.status(500).json({ error: 'Transaction not valid, wrong sender' })
     }
-    if(destin!==opInfo.to){
-      return res.status(500).json({ error: 'Transaction not valid, wrong receiver' })
-    }
+    //if(destin!==opInfo.to){
+    //  return res.status(500).json({ error: 'Transaction not valid, wrong receiver' })
+    //}
+
+    // Get organization from initid
 
     // Form data
     const created = new Date().toJSON().replace('T', ' ').substr(0, 19)
-    const donorAddress = opInfo.from
-    const organizationAddress = opInfo.to
-    let organizationId = ''
-    let organizationName = ''
+    //const donorAddress = opInfo.from
+    //const organizationAddress = opInfo.to
+    //let organizationId = ''
+    //let organizationName = ''
 
     // Get user data
-    console.log('Donor', donorAddress)
-    const userInfo = await getUserByWallet(donorAddress)
+    console.log('Donor', donor)
+    const userInfo = await getUserByWallet(donor)
     console.log('USER', userInfo)
     const userId = userInfo?.id || ''
 
-    // Get org data
-    console.log('Org wallet', organizationAddress)
-    const orgInfo = await getOrganizationsByWallet(organizationAddress)
-    console.log('ORG', orgInfo)
-    if (orgInfo.length > 0) {
-      organizationId = orgInfo[0].id
-      organizationName = orgInfo[0].name
-    } else {
-      console.log('Organization not found', orgInfo?.error)
-      return res.status(500).json({ error: 'Organization not found' })
-    }
-
     // Get initiative info
-    const initiative = await getInitiativeByTag(tag)
+    const initiative = await getInitiativeById(initid)
+    console.log('INITIATIVE', initiative)
+    if(!initiative || initiative?.error) {
+      console.log('ERROR', 'Initiative not found')
+      return res.status(500).json({ error: 'Initiative info not found' })
+    }
     const initiativeId = initiative?.id || ''
     const initiativeName = initiative?.title || 'Direct Donation'
-    console.log('INITIATIVE', initiative)
+
+    // Get organization info
+    const organization = await getOrganizationById(initiative?.organizationId)
+    console.log('ORGANIZATION', organization)
+    if(!organization || organization?.error) {
+      console.log('ERROR', 'Organization not found')
+      return res.status(500).json({ error: 'Organization info not found' })
+    }
+    const organizationId = organization?.id
+    const organizationName = organization?.name
+
+    // Get org data
+    //console.log('Org wallet', organizationAddress)
+    //const orgInfo = await getOrganizationsByWallet(organizationAddress)
+    //console.log('ORG', orgInfo)
+    //if (orgInfo.length > 0) {
+    //  organizationId = orgInfo[0].id
+    //  organizationName = orgInfo[0].name
+    //} else {
+    //  console.log('Organization not found', orgInfo?.error)
+    //  return res.status(500).json({ error: 'Organization not found' })
+    //}
+
+    //// Get initiative info
+    //const initiative = await getInitiativeByTag(tag)
+    //const initiativeId = initiative?.id || ''
+    //const initiativeName = initiative?.title || 'Direct Donation'
+    //console.log('INITIATIVE', initiative)
 
     // Get XLM/USD rate
     const usdRate = await getRates('XLM')
     console.log('XLM/USD', usdRate)
 
-    const amount = opInfo.amount
+    //const amount = opInfo.amount
     const amountCUR = (+amount).toFixed(4)
-    let amountUSD = (+amount * usdRate).toFixed(4)
-    let coinCode = 'XLM'
-    let coinIssuer = 'Stellar'
+    const amountUSD = (+amount * usdRate).toFixed(4)
+    const coinCode = 'XLM'
+    const coinIssuer = 'Stellar'
 
-    if (opInfo.asset_type !== 'native') {
-      amountUSD = '0'
-      coinCode = opInfo.asset_code
-      coinIssuer = opInfo.asset_issuer
-    }
+    //if (opInfo?.asset_type !== 'native') {
+    //  amountUSD = '0'
+    //  coinCode = opInfo?.asset_code
+    //  coinIssuer = opInfo?.asset_issuer
+    //}
 
     let offsetVal = 0
     let offsetTxt = '0 Tons'
-    console.log('CREDIT', initiative.credits)
+    console.log('CREDIT', initiative?.credits)
     if(initiative?.credits?.length > 0){
       const creditVal = initiative?.credits[0].value || 0
       const creditTon = creditVal / (usdRate||1)
@@ -128,7 +150,7 @@ export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
     const metadata = {
       mintedBy: 'CFCE via GiveCredit',
       created: created,
-      donorAddress: donorAddress,
+      donorAddress: donor,
       organization: organizationName,
       initiative: initiativeName,
       image: uriImage,
@@ -153,7 +175,7 @@ export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
     console.log('META URI', uriMeta)
 
     // Mint NFT
-    const resMint = await mint(donorAddress, uriMeta)
+    const resMint = await mint(donor, uriMeta)
     console.log('RESMINT', resMint)
     if (!resMint) {
       return res.status(500).json({ error: 'Error minting NFT' })
@@ -161,14 +183,13 @@ export default async function Mint(req: NextApiRequest, res: NextApiResponse) {
     if (resMint?.error) {
       return res.status(500).json({ error: resMint?.error })
     }
-    const tokenId = resMint?.tokenid
-    //const tokenId = resMint.id
+    const tokenId = resMint?.result
     const offerId = '' // no need for offers in soroban
 
     // Save NFT data to Prisma
     const data = {
       created: new Date(),
-      donorAddress: donorAddress,
+      donorAddress: donor,
       userId: userId,
       organizationId: organizationId,
       initiativeId: initiativeId,

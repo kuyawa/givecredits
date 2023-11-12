@@ -35,7 +35,7 @@ async function sendTx(tx, secondsToWait, server) {
   return {raw:getTransactionResponse, txid}
 }
 
-export default async function invoke({ method, args = [], fee = 100, responseType, parseResultXdr, secondsToWait = 10, rpcUrl, networkPassphrase, contractId, wallet, }) {
+export default async function invoke({ method, args = [], fee = 100, responseType, parseResultXdr, secondsToWait = 10, rpcUrl, networkPassphrase, contractId, wallet, parseMeta=false}) {
   console.log('DATA', JSON.stringify({ method, args, fee, responseType, parseResultXdr, secondsToWait, rpcUrl, networkPassphrase, contractId, wallet }, null, 2))
   let parse = parseResultXdr
   const server = new SorobanClient.Server(rpcUrl, {allowHttp: rpcUrl.startsWith("http://")})
@@ -101,17 +101,17 @@ export default async function invoke({ method, args = [], fee = 100, responseTyp
     //const env  = new SorobanClient.xdr.TransactionEnvelope(raw.envelopeXdr)
     //console.log('RES')
     //const res  = new SorobanClient.xdr.TransactionResult(raw.resultXdr)
-    console.log('META')
-    //const meta = raw.resultMetaXdr
-    //const retn = meta.v3().sorobanMeta().returnValue()
-    //const evts = meta.v3().sorobanMeta().events()
-    const meta = new SorobanClient.xdr.TransactionMetaV3(raw.resultMetaXdr)
-    const lastid = meta?._attributes?._value?._attributes?.sorobanMeta?._attributes?.events[0]?._attributes?.body?._value?._attributes?.data?._value?._attributes?.lo?._value?.toString() || ''
-    const tokenid = contractId + ' #' + lastid
-    console.log('TOKENID', tokenid)
-    //const parsed = parse(raw.resultXdr.result().toXDR("base64"));
-    //console.log('PARSED', env, res, meta)
-    return {result:raw, txid, success:true, tokenid}
+    //const meta = new SorobanClient.xdr.TransactionResultMeta(raw.resultMetaXdr)
+    //const meta = new SorobanClient.xdr.TransactionMetaV3(raw.resultMetaXdr)
+    let parsed = {}
+    if(parseMeta){
+      parsed = parse(raw.resultMetaXdr);
+      //parsed = parse(raw.resultMetaXdr.result().toXDR("base64"));
+    } else {
+      parsed = parse(raw.resultXdr.result().toXDR("base64"));
+    }
+    console.log('PARSED', parsed)
+    return {result:parsed, txid, success:true}
   }
   // otherwise, it returned the result of `sendTransaction`
   if ("errorResult" in raw) {

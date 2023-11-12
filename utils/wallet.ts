@@ -34,6 +34,8 @@ export default class Wallet {
     }
   }
 
+  //async signTransaction(xdr:string, amt:string, memo:string) {}
+
   async payment(dst:string, amt:string, memo:string) {
     try {
       let nwk = process.env.NEXT_PUBLIC_STELLAR_NETWORK.toUpperCase()
