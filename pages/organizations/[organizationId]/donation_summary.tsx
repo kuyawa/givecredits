@@ -130,7 +130,7 @@ export default function Handler({
       console.log('Error sending payment, no Stellar wallet')
       return
     }
-    $$('message', 'Waiting for confirmation')
+    $$('message', 'Confirm payment in your wallet')
     const destin = orgwallet.address
     console.log('Sending payment to', destin)
     await wallet.init()
