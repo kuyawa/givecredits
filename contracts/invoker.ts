@@ -35,7 +35,7 @@ async function sendTx(tx, secondsToWait, server) {
   return {raw:getTransactionResponse, txid}
 }
 
-export default async function invoke({ method, args = [], fee = 100, responseType, parseResultXdr, secondsToWait = 10, rpcUrl, networkPassphrase, contractId, wallet, parseMeta=false}) {
+export default async function invoke({ method, args = [], fee = 100, responseType, parseResultXdr, secondsToWait = 20, rpcUrl, networkPassphrase, contractId, wallet, parseMeta=false}) {
   console.log('DATA', JSON.stringify({ method, args, fee, responseType, parseResultXdr, secondsToWait, rpcUrl, networkPassphrase, contractId, wallet }, null, 2))
   let parse = parseResultXdr
   const server = new SorobanClient.Server(rpcUrl, {allowHttp: rpcUrl.startsWith("http://")})
