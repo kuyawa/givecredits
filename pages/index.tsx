@@ -20,7 +20,7 @@ export default function Home() {
             icon="volunteer_activism"
             href="/organizations"
           />
-          <Link href="/organizations/64e61a296fd6ba67b0c7ee72">
+          <Link href="/organizations/04340418-765d-48ab-af36-512a66c960b4">
             <Card className="h-full p-4">
               <div className="h-full w-full flex flex-col justify-between items-center">
                 <Image

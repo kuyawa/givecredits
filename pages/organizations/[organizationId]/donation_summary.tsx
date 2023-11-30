@@ -144,7 +144,9 @@ export default function Handler({
     }
     setCookie('wallet', donor)
     //const memo = destinTag ? 'tag:'+destinTag : ''
-    const ctrId = 'C...'; // TODO: get ctrid from initid in db
+    // TODO: get ctrid from initid in db
+    //const ctrId = 'CDHGVKFRG7CFXVKTZGNM7VKEQWZDBLH733FD6AD3SN7JZIRZSHZM5Q2S';
+    const ctrId = 'CCHJXOOUDFHM6CKNNQ6ZT3GGVU3UPBDDMYUGOW7CMRYBCEWAAOQNSHQW';
     const result = await donate(ctrId, donor, amount)
     console.log('UI RESULT', result)
     if(!result?.success || result?.error){
@@ -260,7 +262,6 @@ export default function Handler({
       $$('message', 'Error minting NFT')
       return minted
     }
-    //const txurl = process.env.NEXT_PUBLIC_STELLAR_HORIZON + '/' + txid
     $$('message', `NFT minted successfully • <a href="${minted.image}" target="_blank">Image</a> • <a href="${minted.metadata}" target="_blank">Meta</a>`)
     return minted
   }
