@@ -85,8 +85,8 @@ export const updateUser = (id: string, body: Dictionary) => postRegistry('users/
 export const getUserWallets = () => fetchRegistry('userwallets')
 export const newUserWallet = (body: Dictionary) => postRegistry('userwallets', body)
 
-export const newEvent = (body: Dictionary) => postRegistry('events', body)
-export const getEvents = () => fetchRegistry('events')
-export const getEventById = (id: string) => fetchRegistry('events/'+id)
-export const getEventsByOrganization = (id: string) => fetchRegistry('events?orgid='+id)
-export const getEventsByInitiative = (id: string) => fetchRegistry('events?initid='+id)
+export const newStory = (body: Dictionary) => postRegistry('stories', body)
+export const getStories = () => fetchRegistry('stories')
+export const getStoryById = (id: string) => fetchRegistry('stories/'+id)
+export const getStoriesByOrganization = (id: string) => fetchRegistry('stories?orgid='+id)
+export const getStoriesByInitiative = (id: string) => fetchRegistry('stories?initid='+id)
